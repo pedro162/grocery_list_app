@@ -163,10 +163,18 @@ export default {
                     url = config?.url
                     options = config?.options;
                 }
+                
                 let response = await fetch(url, options)
-                response = await response.json()
-                let {state, data} = response
-                if(data?.id > 0){
+                
+                if(response.status == 204){
+                    response = {}
+                }else{
+                    response = await response.json()
+                }
+                
+                let {state, data} = response ? response : {}
+               
+                if(data?.id > 0 || Number(this.request?.product_id) > 0){
                     this.isLoading=false;
                     this.msg_success = "Register successfully"
                     //alert('Register successfully')
@@ -193,7 +201,7 @@ export default {
                     let response = await fetch(url, options)
                     response = await response.json()
                     let {state, data} = response
-                    if(state == true && Number(data?.id) > 0){
+                    if(Number(data?.id) > 0){
                         this.form_data.name = data?.name;
                         this.form_data.category_id = data?.category_id;
                         this.form_data.brand_id = data?.brand_id;

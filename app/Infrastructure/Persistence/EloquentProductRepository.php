@@ -22,7 +22,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
         if ($productId > 0) {
             //update
             $result = ModelProduct::where('id', '=', $productId)->first();
-            $result->updated($product->getProductAray());
+            $result->update($product->getProductAray());
         } else {
 
             //create

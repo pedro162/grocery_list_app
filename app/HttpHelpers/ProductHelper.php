@@ -131,9 +131,8 @@ class ProductHelper extends BaseHelper
         try {
 
             DB::beginTransaction();
-            $command = (new CreateProductCommand())
-                ->productId($id)
-                ->productName($data['name']);
+            $data['id'] = $id;
+            $command = CreateProductCommand::fromArray($data);
             $result = $this->productApplicationService->createProduct($command);
 
             $response = $result['product'] ?? null;

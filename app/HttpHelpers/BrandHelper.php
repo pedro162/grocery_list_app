@@ -59,7 +59,11 @@ class BrandHelper extends BaseHelper
     {
         try {
             DB::beginTransaction();
-            $response = BrandModel::orderBy('id', 'DESC')->paginate(10);
+            if (!empty($data['no_paginate'])) {
+                $response = BrandModel::orderBy('id', 'DESC')->get();
+            } else {
+                $response = BrandModel::orderBy('id', 'DESC')->paginate(10);
+            }
             DB::commit();
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);

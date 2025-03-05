@@ -59,7 +59,12 @@ class CategoryHelper extends BaseHelper
     {
         try {
             DB::beginTransaction();
-            $response = CategoryModel::orderBy('id', 'DESC')->paginate(10);
+            if (!empty($data['no_paginate'])) {
+                $response = CategoryModel::orderBy('id', 'DESC')->get();
+            } else {
+                $response = CategoryModel::orderBy('id', 'DESC')->paginate(10);
+            }
+
             DB::commit();
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);

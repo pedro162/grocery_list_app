@@ -39,12 +39,12 @@
                         <select
 
                             id="brand"
-                            v-model="form_data.brand"
+                            v-model="form_data.brand_id"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         >
                             <option value='' >Select...</option>
-                            <option v-for="(item, index) in brands.data" :key="index+item.id" :value="item.id" >{{item.name}}</option>
+                            <option v-for="(item, index) in brands" :key="index+item.id" :value="item.id" >{{item.name}}</option>
                             
                         </select>
                     </div>
@@ -56,12 +56,12 @@
                         <select
 
                             id="category"
-                            v-model="form_data.category"
+                            v-model="form_data.category_id"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             required
                         >
                             <option value='' >Select...</option>
-                            <option v-for="(item, index) in categories.data" :key="index+item.id" :value="item.id" >{{item.name}}</option>
+                            <option v-for="(item, index) in categories" :key="index+item.id" :value="item.id" >{{item.name}}</option>
                             
                         </select>
 
@@ -130,8 +130,8 @@ export default {
             form_data:{
                 //csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 name:'',
-                brand:'',
-                category:'',
+                brand_id:'',
+                category_id:'',
                 price:'',
                 photos:[]
             },
@@ -166,7 +166,7 @@ export default {
                 let response = await fetch(url, options)
                 response = await response.json()
                 let {state, data} = response
-                if(state == true){
+                if(data?.id > 0){
                     this.isLoading=false;
                     this.msg_success = "Register successfully"
                     //alert('Register successfully')
@@ -195,8 +195,8 @@ export default {
                     let {state, data} = response
                     if(state == true && Number(data?.id) > 0){
                         this.form_data.name = data?.name;
-                        this.form_data.category = data?.category_id;
-                        this.form_data.brand = data?.brand_id;
+                        this.form_data.category_id = data?.category_id;
+                        this.form_data.brand_id = data?.brand_id;
                         this.form_data.price = data?.price;
                     }else{
                         throw new Error(data)
@@ -215,9 +215,10 @@ export default {
                 this.isLoading  = true;
                 this.error      = null;
                 let { url, options } = PRODUCT_CATEGORY_LOAD({})
-                let response = await fetch(url, options)
+                let response = await fetch(url+'?no_paginate=1', options)
                 response = await response.json()
                 let {state, data} = response
+
                 if(state == true ){
                     this.categories = data;
                 }else{
@@ -236,9 +237,10 @@ export default {
                 this.isLoading  = true;
                 this.error      = null;
                 let { url, options } = PRODUCT_BRAND_LOAD({})
-                let response = await fetch(url, options)
+                let response = await fetch(url+'?no_paginate=1', options)
                 response = await response.json()
                 let {state, data} = response
+
                 if(state == true ){
                     this.brands = data;
                 }else{

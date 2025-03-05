@@ -10,7 +10,8 @@ export const GROCERY_LIST_STORE = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -32,7 +33,8 @@ export const GROCERY_LIST_UPDATE = (id, data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -52,7 +54,8 @@ export const GROCERY_LIST_GET_ONE = (id, data = {})=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -73,7 +76,8 @@ export const GROCERY_LIST_LOAD = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -94,7 +98,8 @@ export const GROCERY_LIST_ITENS = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -114,6 +119,7 @@ export const GROCERY_LIST_GET_ITEMS = (id, data={})=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Accept", "application/json");
     
     data['csrfToken'] = CSRF_TOKEN;
 
@@ -138,6 +144,7 @@ export const PRODUCT_STORE = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Accept", "application/json");
     
     data['csrfToken'] = CSRF_TOKEN;
 
@@ -160,6 +167,7 @@ export const PRODUCT_UPDATE = (id, data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Accept", "application/json");
     
     data['csrfToken'] = CSRF_TOKEN;
 
@@ -180,6 +188,7 @@ export const PRODUCT_GET_ONE = (id, data = {})=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Accept", "application/json");
     
     data['csrfToken'] = CSRF_TOKEN;
 
@@ -200,8 +209,9 @@ export const PRODUCT_GET_ONE = (id, data = {})=>{
 export const PRODUCT_LOAD = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
-    myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Access-Control-Allow-Origin", "*");   
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -224,7 +234,8 @@ export const PRODUCT_BRAND_STORE = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -246,7 +257,8 @@ export const PRODUCT_BRAND_UPDATE = (id, data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -266,7 +278,8 @@ export const PRODUCT_BRAND_GET_ONE = (id, data = {})=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -287,7 +300,8 @@ export const PRODUCT_BRAND_LOAD = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -309,7 +323,8 @@ export const PRODUCT_CATEGORY_STORE = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -331,7 +346,8 @@ export const PRODUCT_CATEGORY_UPDATE = (id, data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -351,7 +367,8 @@ export const PRODUCT_CATEGORY_GET_ONE = (id, data = {})=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 
@@ -372,7 +389,8 @@ export const PRODUCT_CATEGORY_LOAD = (data)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=UTF-8");
     myHeaders.append("Access-Control-Allow-Origin", "*");
-    
+    myHeaders.append("Accept", "application/json");
+
     data['csrfToken'] = CSRF_TOKEN;
 
     let myInit = { 

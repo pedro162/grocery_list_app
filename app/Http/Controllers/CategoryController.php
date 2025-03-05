@@ -10,10 +10,10 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $prodHelper = new CategoryHelper();
-        $response = $prodHelper->index();
+        $response = $prodHelper->index($request->all());
         $httpResponseCode = $prodHelper->getHttpResponseCode();
         return response()->json($response, $httpResponseCode);
     }

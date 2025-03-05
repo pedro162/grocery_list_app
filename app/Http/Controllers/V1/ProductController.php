@@ -26,7 +26,7 @@ class ProductController extends Controller
     {
         $response = $this->productHelper->index($request->validated());
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json(new GetAllProductResource($response['data']['collection'] ?? []), $httpResponseCode);
+        return response()->json(new GetAllProductResource($response['data'] ?? []), $httpResponseCode);
     }
 
     /**

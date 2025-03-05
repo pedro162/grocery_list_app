@@ -8,7 +8,7 @@ use App\Domain\Product\Repositories\ProductRepositoryInterface;
 use App\Domain\Product\ValueObjects\ProductId;
 use App\Domain\Product\ValueObjects\ProductName;
 
-class CreateProductHandler
+class GetAllProductHandler
 {
     private ProductRepositoryInterface $repository;
 
@@ -17,11 +17,8 @@ class CreateProductHandler
         $this->repository = $repository;
     }
 
-    public function handler(CreateProductCommand $command): ?array
+    public function handler(CreateProductCommand $command = null): ?array
     {
-        $person = new Product();
-        $person->setId(new ProductId($command->getProductId()));
-        $person->setName(new ProductName($command->getProductName()));
-        return $this->repository->save($person);
+        return $this->repository->getAll();
     }
 }

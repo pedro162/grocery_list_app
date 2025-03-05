@@ -1,9 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
 use App\Domain\Product\Entities\Product;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Product\GetAllProductRequest;
 use App\Http\Requests\V1\Product\StoreProductRequest;
+use App\Http\Requests\V1\Product\UpdateProductRequest;
+use App\Http\Resources\V1\Product\DeleteProductResource;
+use App\Http\Resources\V1\Product\GetAllProductResource;
+use App\Http\Resources\V1\Product\GetByIdProductResource;
+use App\Http\Resources\V1\Product\StoreProductResource;
 use App\HttpHelpers\ProductHelper;
 use Illuminate\Http\Request;
 
@@ -13,11 +20,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(GetAllProductRequest $request)
     {
-        $response = $this->productHelper->index();
+        $response = $this->productHelper->index($request->validated());
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json($response['collection'] ?? [], $httpResponseCode);
+        return response()->json(new GetAllProductResource($response['collection'] ?? []), $httpResponseCode);
     }
 
     /**
@@ -27,7 +34,7 @@ class ProductController extends Controller
     {
         $response = $this->productHelper->store($request->validated());
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json($response['product'], $httpResponseCode);
+        return response()->json(new StoreProductResource($response['product'] ?? []), $httpResponseCode);
     }
 
     /**
@@ -37,17 +44,17 @@ class ProductController extends Controller
     {
         $response = $this->productHelper->show($id);
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json($response['product'] ?? [], $httpResponseCode);
+        return response()->json(new GetByIdProductResource($response['product'] ?? []), $httpResponseCode);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, string $id)
     {
-        $response = $this->productHelper->update($id, $request->all());
+        $response = $this->productHelper->update($id, $request->validated());
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json($response['product'] ?? [], $httpResponseCode);
+        return response()->json(new GetByIdProductResource($response['product'] ?? []), $httpResponseCode);
     }
 
     /**
@@ -57,6 +64,6 @@ class ProductController extends Controller
     {
         $response = $this->productHelper->destroy($id);
         $httpResponseCode = $this->productHelper->getHttpResponseCode();
-        return response()->json([], $httpResponseCode);
+        return response()->json(new DeleteProductResource($response['product'] ?? []), $httpResponseCode);
     }
 }

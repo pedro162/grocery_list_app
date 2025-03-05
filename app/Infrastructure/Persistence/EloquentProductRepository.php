@@ -11,7 +11,7 @@ use App\Models\Product as ModelProduct;
 
 class EloquentProductRepository implements ProductRepositoryInterface
 {
-    public function save(Product $product): ?Product
+    public function save(Product $product): ?array
     {
         //Todo
         //Implement an object model instance and save or update within database, after that, return the object product implementation
@@ -37,16 +37,42 @@ class EloquentProductRepository implements ProductRepositoryInterface
 
         return $this->findById($product->getId());
     }
-    public function findById(ProductId $id): ?Product
+
+    public function findById(ProductId $id): ?array
     {
-        $product = DB::table('products')->where('id', '=', (string)$id)->first();
+        $product = ModelProduct::with(['images'])->where('id', '=', (string)$id)->first();
+
         if ($product) {
             $objProduct = new Product();
             $objProduct->setId(new ProductId($product->id));
             $objProduct->setName(new ProductName($product->name));
 
-            return $objProduct;
+            return ['objProduct' => $objProduct, 'product' => $product];
         }
+
         return null;
+    }
+
+    public function getAll(array $data = []): ?array
+    {
+        $products = ModelProduct::with(['images'])->orderBy('id', 'DESC')->paginate(10);
+        $arrProducts = [];
+
+        foreach ($products as $product) {
+            $objProduct = new Product();
+            $objProduct->setId(new ProductId($product->id));
+            $objProduct->setName(new ProductName($product->name));
+            $arrProducts[] = $objProduct;
+        }
+
+        return [
+            'arrProducts' => $arrProducts,
+            'collection' => $products
+        ];
+    }
+
+    public function delete(ProductId $id): void
+    {
+        ModelProduct::with(['images'])->where('id', '=', (string)$id)->delete();
     }
 }

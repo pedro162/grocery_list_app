@@ -8,7 +8,7 @@ class ProductId
 
     public function __construct(string $value)
     {
-        if (!(isset($value) && strlen(trim($value)) > 0)) {
+        if (((int) $value) < 0) {
             throw new \InvalidArgumentException("Product ID cannot be empty");
         }
         $this->value = $value;

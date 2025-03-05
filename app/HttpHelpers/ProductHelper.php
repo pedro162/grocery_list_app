@@ -16,6 +16,7 @@ use App\Utils\ImageHandler;
 
 class ProductHelper extends BaseHelper
 {
+    public function __construct(protected ProductApplicationService $productApplicationService) {}
 
     public function store(array $data, array $files = [])
     {
@@ -23,18 +24,12 @@ class ProductHelper extends BaseHelper
         try {
             DB::beginTransaction();
 
-            $objRepo = new EloquentProductRepository();
-            $objHandler = new CreateProductHandler($objRepo);
-            $objProductHandler = new InfoProductHandler($objRepo);
-            $objService = new ProductApplicationService($objHandler, $objProductHandler);
-
             $command = (new CreateProductCommand())
                 ->productId(0)
                 ->productName($data['name']);
-            $domainProductObject = $objService->createProduct($command);
-            $response = ProductModel::where('id', '=', (string) $domainProductObject->getId())->first();
+            $result = $this->productApplicationService->createProduct($command);
             DB::commit();
-            $this->setHttpResponseData($response);
+            $this->setHttpResponseData($result ?? []);
             $this->setHttpResponseState(true);
             $stCod = 201;
         } catch (\Exception $th) {
@@ -60,7 +55,9 @@ class ProductHelper extends BaseHelper
     {
         try {
             DB::beginTransaction();
-            $response = ProductModel::orderBy('id', 'DESC')->paginate(10);
+            $result = $this->productApplicationService->getAllProduct();
+            $response = $result['collection'];
+
             if ($response) {
                 foreach ($response as $item) {
                     $images = $item->images;
@@ -102,11 +99,7 @@ class ProductHelper extends BaseHelper
 
         try {
             DB::beginTransaction();
-
-            $objRepo = new EloquentProductRepository();
-            $domainProductObject = $objRepo->findById(new ProductId($id));
-            $response = ProductModel::where('id', '=', (string) $domainProductObject->getId())->first();
-
+            $response = $this->productApplicationService->findProductById($id);
             DB::commit();
 
             if (!$response) {
@@ -143,38 +136,35 @@ class ProductHelper extends BaseHelper
         try {
 
             DB::beginTransaction();
-
-            $objRepo = new EloquentProductRepository();
-            $objHandler = new CreateProductHandler($objRepo);
-            $objProductHandler = new InfoProductHandler($objRepo);
-            $objService = new ProductApplicationService($objHandler, $objProductHandler);
-
             $command = (new CreateProductCommand())
                 ->productId($id)
                 ->productName($data['name']);
-            $domainProductObject = $objService->createProduct($command);
-            $response = ProductModel::where('id', '=', (string) $domainProductObject->getId())->first();
-            $images = $response->images;
+            $result = $this->productApplicationService->createProduct($command);
+
+            $response = $result['product'] ?? null;
+            $images = $response?->images;
+
             if ($images) {
                 foreach ($images as $image) {
                     ImageHandler::deleteImage($image->full_path);
                     $image->delete();
                 }
             }
+
             if (isset($data['photos']) && count($data['photos']) > 0) {
                 foreach ($data['photos'] as $photo) {
                     if ($pathImage = ImageHandler::saveBase64Image($photo['url'])) {
                         SystemFileModel::create([
                             'full_path' => $pathImage,
-                            'reference_id' => (string) $domainProductObject->getId(),
+                            'reference_id' => (string) $response?->id,
                             'reference' => 'products',
                         ]);
                     }
                 }
             }
-            //deleteImage
+
             DB::commit();
-            $this->setHttpResponseData($response);
+            $this->setHttpResponseData($result);
             $this->setHttpResponseState(true);
             $stCod = 201;
         } catch (\Exception $th) {

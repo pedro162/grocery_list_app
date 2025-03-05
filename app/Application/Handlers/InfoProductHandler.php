@@ -20,7 +20,7 @@ class InfoProductHandler
         $this->repository = $repository;
     }
 
-    public function handler(InfoProductCommand $command): ?Product
+    public function handler(InfoProductCommand $command): ?array
     {
         $person = new Product();
         $person->setId(new ProductId($command->getProductId()));

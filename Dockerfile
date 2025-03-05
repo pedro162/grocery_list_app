@@ -67,5 +67,12 @@ RUN a2enmod rewrite
 # Altere a porta de escuta do Apache para 80
 RUN sed -i 's/:80/:80/g' /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
 
+# Criar um usuário não-root para executar o processo
+RUN useradd -ms /bin/bash appuser && \
+    chown -R appuser:appuser /var/www/html/grocery_list_app
+
+# Mudar para o usuário não-root
+USER appuser
+
 # Comando para iniciar o Apache
 CMD ["apache2-foreground"]

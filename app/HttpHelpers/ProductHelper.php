@@ -23,11 +23,7 @@ class ProductHelper extends BaseHelper
         $stCod = 201;
         try {
             DB::beginTransaction();
-
-            $command = (new CreateProductCommand())
-                ->productId(0)
-                ->productName($data['name']);
-            $result = $this->productApplicationService->createProduct($command);
+            $result = $this->productApplicationService->createProduct(CreateProductCommand::fromArray($data));
             DB::commit();
             $this->setHttpResponseData($result ?? []);
             $this->setHttpResponseState(true);
@@ -109,7 +105,6 @@ class ProductHelper extends BaseHelper
 
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
-            $stCod = 201;
         } catch (\Exception $th) {
             DB::rollback();
 
@@ -132,7 +127,7 @@ class ProductHelper extends BaseHelper
 
     public function update(string $id, array $data, array $files = [])
     {
-        $stCod = 201;
+        $stCod = 204;
         try {
 
             DB::beginTransaction();
@@ -166,11 +161,10 @@ class ProductHelper extends BaseHelper
             DB::commit();
             $this->setHttpResponseData($result);
             $this->setHttpResponseState(true);
-            $stCod = 201;
         } catch (\Exception $th) {
             DB::rollback();
 
-            $msg  = $th->getMessage();
+            $msg  = $th->getMessage() . ' - ' . $th->getFile() . ' - ' . $th->getLine();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -189,15 +183,12 @@ class ProductHelper extends BaseHelper
     public function destroy(string $id)
     {
         $response = null;
-        $stCod = 200;
+        $stCod = 204;
 
         try {
             DB::beginTransaction();
 
-            $objRepo = new EloquentProductRepository();
-            $domainProductObject = $objRepo->findById(new ProductId($id));
-            //TODO
-            //$response = ProductModel::where('id', '=', (string) $domainProductObject->getId());
+            $result = $this->productApplicationService->destroy($id);
 
             DB::commit();
             $msg   = 'Bank transaction removed successfully';

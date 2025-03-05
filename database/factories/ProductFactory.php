@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -20,7 +22,9 @@ class ProductFactory extends Factory
     {
         return [
             'name' => Str::random(50),
-            'users_create_id' => User::factory(),
+            'brand_id' => Brand::factory()->create()->id,
+            'category_id' => Category::factory()->create()->id,
+            'users_create_id' => User::first() ? User::first()->id : User::factory()->create()->id,
             'users_update_id' => null,
         ];
     }

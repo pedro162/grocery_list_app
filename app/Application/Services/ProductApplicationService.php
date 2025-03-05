@@ -5,6 +5,7 @@ namespace App\Application\Services;
 use App\Application\Commands\CreateProductCommand;
 use App\Application\Commands\InfoProductCommand;
 use App\Application\Handlers\CreateProductHandler;
+use App\Application\Handlers\DeleteProductHandler;
 use App\Application\Handlers\GetAllProductHandler;
 use App\Application\Handlers\InfoProductHandler;
 use App\Domain\Product\Entities\Product;
@@ -14,7 +15,8 @@ class ProductApplicationService
     public function __construct(
         private CreateProductHandler $createProductHandler,
         private InfoProductHandler $infoProductHandler,
-        private GetAllProductHandler $getAllProductHandler
+        private GetAllProductHandler $getAllProductHandler,
+        private DeleteProductHandler $destroyProductHandler
     ) {}
 
     public function setInfoProductHandler(InfoProductHandler $infoProductHandler): void
@@ -41,6 +43,6 @@ class ProductApplicationService
     public function destroy(string $productId)
     {
         $command = new InfoProductCommand($productId);
-        return $this->infoProductHandler->handler($command);
+        return $this->destroyProductHandler->handler($command);
     }
 }

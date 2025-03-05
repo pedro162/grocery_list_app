@@ -19,9 +19,11 @@ class CreateProductHandler
 
     public function handler(CreateProductCommand $command): ?array
     {
-        $person = new Product();
-        $person->setId(new ProductId($command->getProductId()));
-        $person->setName(new ProductName($command->getProductName()));
-        return $this->repository->save($person);
+        return $this->repository->save(Product::createProduct([
+            'id' => $command->getProductId(),
+            'name' => $command->getProductName(),
+            'brand_id' => $command->getProductBrandId(),
+            'category_id' => $command->getProductCategoryId(),
+        ]));
     }
 }

@@ -4,7 +4,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GroceryListController;
 use App\Http\Controllers\GroceryListItemController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\V1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

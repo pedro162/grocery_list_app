@@ -25,6 +25,6 @@ class DeleteProductHandler
         $product = new Product();
         $product->setId(new ProductId($command->getProductId()));
 
-        return $this->repository->delete($product->getId());
+        $this->repository->delete($product->getId());
     }
 }

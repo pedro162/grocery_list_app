@@ -13,25 +13,22 @@ class EloquentProductRepository implements ProductRepositoryInterface
 {
     public function save(Product $product): ?array
     {
+
         //Todo
         //Implement an object model instance and save or update within database, after that, return the object product implementation
         $productId = (string) $product->getId();
         $productId = (int) $productId;
+
         if ($productId > 0) {
             //update
             $result = ModelProduct::where('id', '=', $productId)->first();
-            $result->updated([
-                'name' => $product->getName(),
-                //'users_create_id'
-                //'users_update_id'   
-            ]);
+            $result->updated($product->getProductAray());
         } else {
+
             //create
-            $result = ModelProduct::create([
-                'name' => $product->getName(),
-                //'users_create_id'
-                //'users_update_id'   
-            ]);
+            $data = $product->getProductModel()->toArray();
+            unset($data['id']);
+            $result = ModelProduct::create($data);
             $product->setId(new ProductId($result->id));
         }
 
@@ -43,11 +40,11 @@ class EloquentProductRepository implements ProductRepositoryInterface
         $product = ModelProduct::with(['images'])->where('id', '=', (string)$id)->first();
 
         if ($product) {
-            $objProduct = new Product();
-            $objProduct->setId(new ProductId($product->id));
-            $objProduct->setName(new ProductName($product->name));
-
-            return ['objProduct' => $objProduct, 'product' => $product];
+            $objProduct = Product::createProduct($product->toArray());
+            return [
+                'objProduct' => $objProduct,
+                'product' => $product
+            ];
         }
 
         return null;
@@ -59,10 +56,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
         $arrProducts = [];
 
         foreach ($products as $product) {
-            $objProduct = new Product();
-            $objProduct->setId(new ProductId($product->id));
-            $objProduct->setName(new ProductName($product->name));
-            $arrProducts[] = $objProduct;
+            $arrProducts[] = Product::createProduct($product->toArray());
         }
 
         return [
@@ -73,6 +67,6 @@ class EloquentProductRepository implements ProductRepositoryInterface
 
     public function delete(ProductId $id): void
     {
-        ModelProduct::with(['images'])->where('id', '=', (string)$id)->delete();
+        ModelProduct::with(['images'])->where('id', '=', (string)$id)->first()->delete();
     }
 }

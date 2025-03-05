@@ -11,4 +11,13 @@ class CreateProductCommand extends BaseProductCommand
         $this->productId = $productId;
         $this->productName = $productName;
     }
+
+    public static function fromArray(array $data): CreateProductCommand
+    {
+        return (new self())
+            ->productId($data['id'] ?? '')
+            ->productName($data['name'] ?? '')
+            ->productBrandId($data['brand_id'] ?? '')
+            ->productCategoryId($data['category_id'] ?? '');
+    }
 }

@@ -26,6 +26,7 @@ class ProductApplicationServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->refreshApplication();
         $this->testProductApplicationServiceBootstrap();
     }
 
@@ -83,30 +84,104 @@ class ProductApplicationServiceTest extends TestCase
         $this->assertGreaterThan(0, $idProductEntityProductObject, "It was no possible to load the product of code \"{$idProductEntityProductObject}\"");
     }
 
-    #[DataProvider('createProductApi')]
+    /* #[DataProvider('createProductApi')]
     public function testCreateProductApi(ModelsProduct $product, $statusCode)
     {
-        $response = $this->post($this->url, $product->toArray());
+        $response = $this->withHeaders([
+            //'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->post(route($this->url . '.store'), $product->toArray());
+
         $response->assertStatus($statusCode);
     }
 
     public static function createProductApi(): array
     {
         return [
-            'Nome inválido' => [ModelsProduct::factory()->make(['name' => '']), 201],
+            'Nome inválido' => [ModelsProduct::factory()->make(['name' => '']), 422],
             'Nome válido' => [ModelsProduct::factory()->make(['name' => 'Test product']), 201],
         ];
+    } */
+
+    public function testCreateProductApiWithInvalidName()
+    {
+        $product = ModelsProduct::factory()->make(['name' => '']);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->post(route($this->url . '.store'), $product->toArray());
+
+        $response->assertStatus(422);
+    }
+
+    public function testCreateProductApiWithValidName()
+    {
+        $product = ModelsProduct::factory()->make(['name' => 'teste']);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->post(route($this->url . '.store'), $product->toArray());
+
+        $response->assertStatus(201);
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+            ]
+        ]);
+    }
+
+    public function testGetAllProductApi()
+    {
+        $product = ModelsProduct::factory()->make(['name' => 'teste']);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->get(route($this->url . '.index'), $product->toArray());
+
+        $response->assertStatus(201);
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'name',
+                    'brand_id',
+                    'category_id',
+                ]
+            ]
+        ]);
+    }
+
+    public function testGetByIdProductApi()
+    {
+        $product = ModelsProduct::factory()->create(['name' => 'teste']);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->get(route($this->url . '.show', ['product' => $product->id]));
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'brand_id',
+                'category_id',
+            ]
+        ]);
+    }
+
+    public function testDeleteProductApi()
+    {
+        $product = ModelsProduct::factory()->create(['name' => 'teste']);
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->delete(route($this->url . '.destroy', ['product' => $product->id]));
+
+        $response->assertStatus(204);
+        $this->assertSoftDeleted(ModelsProduct::class, ['id' => $product->id]);
+        //$this->assertDatabaseMissing(ModelsProduct::class, ['id' => $product->id]);
     }
 
     private function testProductApplicationServiceBootstrap()
     {
-        $objRepo = new EloquentProductRepository();
-        $objHendler = new CreateProductHandler($objRepo);
-        $objProductHendler = new InfoProductHandler($objRepo);
-        $objGetAllProductsHanlder = new GetAllProductHandler($objRepo);
-        $objSerice = new ProductApplicationService($objHendler, $objProductHendler, $objGetAllProductsHanlder);
-
-        $this->productApplicationService = $objSerice;
+        $this->productApplicationService = app(ProductApplicationService::class);
         $this->url = 'products';
     }
 }
